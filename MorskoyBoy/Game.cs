@@ -8,13 +8,13 @@ namespace MorskoyBoy
 {
     internal class Game
     {
-        private (int x, int y) arenaDimensions = (20, 20); //Sets up arena dimensions
+        private readonly (int x, int y) arenaDimensions = (20, 20); //Sets up arena dimensions
 
         // amount of different ship types
-        private int fourDeckAmount = 1;
-        private int threeDeckAmount = 2;
-        private int doubleDeckAmount = 3;
-        private int singleDeckAmount = 4;
+        private const int fourDeckAmount = 1;
+        private const int threeDeckAmount = 2;
+        private const int doubleDeckAmount = 3;
+        private const int singleDeckAmount = 4;
 
         Arena arena1;
         Arena arena2;
@@ -24,13 +24,10 @@ namespace MorskoyBoy
             arena1 = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
             arena2 = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
 
-            Console.WriteLine("Player 1, get ready to set your arena, waiting for your input");
-            Console.ReadKey();
+            UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 1);
             arena1.SetArena();
-            Console.Clear();
 
-            Console.WriteLine("Player 2, get ready to set your arena, waiting for your input");
-            Console.ReadKey();
+            UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
             arena2.SetArena();
         }
 
@@ -38,57 +35,44 @@ namespace MorskoyBoy
         {
             int turns = 0;
 
-            while (!arena1.WinCheck() && !arena2.WinCheck())
+            while (!arena1.AllShipsDestroyed() && !arena2.AllShipsDestroyed())
             {
                 turns++;
 
-                if(turns % 2 == 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Player 2, get ready to make a move, waiting for your input");
-                    Console.ReadKey();
-
-                    AttackLogic.ChooseACellToAttack(arena1);
-                    Console.WriteLine("Waiting for input to continue");
-                    Console.ReadKey();
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Player 1, get ready to make a move, waiting for your input");
-                    Console.ReadKey();
-
-                    AttackLogic.ChooseACellToAttack(arena2);
-                    Console.WriteLine("Waiting for input to continue");
-                    Console.ReadKey();
-                }
+                Turn(turns % 2);
 
             }
         }
+        private void Turn(int turnsMod2)
+        {
+            if (turnsMod2 == 0)
+                turnsMod2 = 2;
+
+            UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, turnsMod2);
+
+            if (turnsMod2 == 1)
+                AttackLogic.ChooseACellToAttack(arena2);
+            else
+                AttackLogic.ChooseACellToAttack(arena1);
+
+            UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, turnsMod2);
+        }
+
 
         public void EndGame()
-       {
-            Console.Clear();
-            if (arena1.WinCheck())
+        {
+            if (arena1.AllShipsDestroyed())
             {
-                Console.WriteLine("Player 2 wins");
+                UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 2);
                 return;
             }
 
-            Console.WriteLine("Player 1 wins");
-
-            Console.ReadLine();
+            UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 1);
         }
 
         public void PreGame()
         {
-            Console.WriteLine("Rules: First, two players set their fields up.");
-            Console.WriteLine("To move ships around use WASD, to rotate ships use R, to secure ship position use C. Then the game starts.");
-            Console.WriteLine("Two players take turns, they blindly shoot enemy cells, in case of a hit '!' symbol appears on a screen. In case of a miss '%' symbol appears.");
-            Console.WriteLine("In case of a hit, player gets a chance to make another shot immediately. First one to destroy all enemy ships wins.");
-            Console.WriteLine("Waiting for your input to start the game");
-            Console.ReadKey();
-            Console.Clear();
+            UIManager.UI_DisplayMessage(UIManager.MessageName.RuleMessage, 0);
         }
 
     }

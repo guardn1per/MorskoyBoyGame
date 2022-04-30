@@ -176,7 +176,7 @@ namespace MorskoyBoy
 
         }
 
-        public bool WinCheck()
+        public bool AllShipsDestroyed()
         {
             if (shipDecksCount > 0)
                 return false;

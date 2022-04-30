@@ -10,7 +10,7 @@ namespace MorskoyBoy
     {
         public static void ChooseACellToAttack(Arena arena)
         {
-            if (arena.WinCheck())
+            if (arena.AllShipsDestroyed())
                 return;
 
 
@@ -35,7 +35,7 @@ namespace MorskoyBoy
                         return;
                     }
 
-                    Console.WriteLine("Impossible To Perform Attack Here");
+                    UIManager.UI_DisplayError(1);
                 }
             }
         }

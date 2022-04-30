@@ -70,7 +70,7 @@ namespace MorskoyBoy
                         return;
                     }
 
-                    Console.WriteLine("Cannot place ship here");
+                    UIManager.UI_DisplayError(0);
                 }
             }
         }

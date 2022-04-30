@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Arena.cs" />
     <Compile Include="AttackLogic.cs" />
+    <Compile Include="UIManager.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="InputToCommand.cs" />
     <Compile Include="ShipPlacementMovement.cs" />
