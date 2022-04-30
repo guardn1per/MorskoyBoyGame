@@ -119,7 +119,7 @@ namespace MorskoyBoy
                     arenaToDisplay[shipCoordinates.y + i, shipCoordinates.x] = '#';
                 }
 
-                DisplayArenaToDisplay();
+                UIManager.DisplayArena(arenaToDisplay);
 
                 return;
             }
@@ -129,33 +129,19 @@ namespace MorskoyBoy
                 arenaToDisplay[shipCoordinates.y, shipCoordinates.x + i] = '#';
             }
 
-            DisplayArenaToDisplay();
+            UIManager.DisplayArena(arenaToDisplay);
         }
         public void UpdateArenaToDisplay((int x, int y) coordinates)
         {
             arenaToDisplay = arenaToDisplayForEnemy.Clone() as char[,];
             arenaToDisplay[coordinates.y, coordinates.x] = '@';
 
-            DisplayArenaToDisplay();
+            UIManager.DisplayArena(arenaToDisplay);
         }
         private void UpdateArenaToDisplay()
         {
             arenaToDisplay = arenaToDisplayForEnemy.Clone() as char[,];
-            DisplayArenaToDisplay();
-        }
-
-        private void DisplayArenaToDisplay()
-        {
-            Console.Clear();
-            for (int i = 0; i < arenaDimensions.y; i++)
-            {
-                for (int j = 0; j < arenaDimensions.x; j++)
-                {
-                    Console.Write(arenaToDisplay[i, j] + " ");
-                }
-
-                Console.WriteLine();
-            }
+            UIManager.DisplayArena(arenaToDisplay);
         }
 
         public void PerformAttack((int x, int y) coordinates)
