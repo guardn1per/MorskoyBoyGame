@@ -23,6 +23,7 @@ namespace MorskoyBoy
             return res;
         }
         private char[,] arenaToDisplay;
+        public char[,] GetArenaToDisplay() =>  arenaToDisplay.Clone() as char[,];
         private char[,] arenaToDisplayForEnemy;
 
         private (int x, int y) arenaDimensions;
@@ -135,33 +136,26 @@ namespace MorskoyBoy
         {
             arenaToDisplay = arenaToDisplayForEnemy.Clone() as char[,];
             arenaToDisplay[coordinates.y, coordinates.x] = '@';
-
-            UIManager.DisplayArena(arenaToDisplay);
         }
-        private void UpdateArenaToDisplay()
+        public void UpdateArenaToDisplay()
         {
             arenaToDisplay = arenaToDisplayForEnemy.Clone() as char[,];
-            UIManager.DisplayArena(arenaToDisplay);
         }
 
-        public void PerformAttack((int x, int y) coordinates)
+        public bool HitCheck((int x, int y) attackPoint) => arena[attackPoint.y, attackPoint.x] == '#';
+        public void UpdateInformationOnAttack(bool isHit, (int x, int y) attackPoint)
         {
-            if (arena[coordinates.y, coordinates.x] == '#')
+            if (isHit)
             {
-                arenaToDisplayForEnemy[coordinates.y, coordinates.x] = '!';
-                arena[coordinates.y, coordinates.x] = '!';
+                arenaToDisplayForEnemy[attackPoint.y, attackPoint.x] = '!';
+                arena[attackPoint.y, attackPoint.x] = '!';
                 shipDecksCount--;
-                Game.GameCycle_Attack(this); //Gives one more shot in case of a hit
                 return;
             }
-            
-            arena[coordinates.y, coordinates.x] = '%';
-            arenaToDisplayForEnemy[coordinates.y, coordinates.x] = '%';
 
-            UpdateArenaToDisplay();
-
+            arena[attackPoint.y, attackPoint.x] = '%';
+            arenaToDisplayForEnemy[attackPoint.y, attackPoint.x] = '%';
         }
-
         public bool AllShipsDestroyed()
         {
             if (shipDecksCount > 0)

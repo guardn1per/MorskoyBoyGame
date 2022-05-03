@@ -12,32 +12,42 @@ namespace MorskoyBoy
 
         // amount of different ship types
         private const int fourDeckAmount = 1;
-        private const int threeDeckAmount = 2;
-        private const int doubleDeckAmount = 3;
-        private const int singleDeckAmount = 4;
+        private const int threeDeckAmount = 0;
+        private const int doubleDeckAmount = 0;
+        private const int singleDeckAmount = 0;
 
-        Arena arena1;
-        Arena arena2;
+        private Player[] players;
 
-        public void InitArenas()
+        private bool ChangePlayer = true;
+
+        public void Init()
         {
-            arena1 = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
-            arena2 = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
+            players = new Player[2];
+
+            players[0] = new Player(1);
+            players[0].SetArena(arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
+
+            players[1] = new Player(2);
+            players[1].SetArena(arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
+
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 1);
-            arena1.SetArena();
+            players[0].GetArena().SetArena();
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
-            arena2.SetArena();
+            players[1].GetArena().SetArena();
         }
-        public static void GameCycle_Attack(Arena arena)
+        public void GameCycle_Attack(Player player)
         {
+            var arena = player.GetArena();
+
             if (arena.AllShipsDestroyed())
                 return;
 
 
             (int x, int y) coordinatesOfAttack = (0, 0);
             arena.UpdateArenaToDisplay(coordinatesOfAttack);
+            UIManager.DisplayArena(arena);
 
             while (true)
             {
@@ -48,12 +58,13 @@ namespace MorskoyBoy
                     coordinatesOfAttack = newCoordinates;
 
                 arena.UpdateArenaToDisplay(coordinatesOfAttack);
+                UIManager.DisplayArena(arena);
                 if (InputToCommand.GetCommand(input) == Command.ChooseAPoint)
                 {
                     if (MovementManager.isPossibleToChosseAPoint(coordinatesOfAttack, arena))
                     {
-                        arena.PerformAttack(coordinatesOfAttack);
-
+                        PerformAttack(coordinatesOfAttack, player);
+                        UIManager.DisplayArena(arena);
                         return;
                     }
 
@@ -62,37 +73,50 @@ namespace MorskoyBoy
             }
         }
 
+        private void PerformAttack((int x, int y) coordinates, Player player)
+        {
+            var arena = player.GetArena();
+
+            var isHit = arena.HitCheck(coordinates);
+            arena.UpdateInformationOnAttack(isHit, coordinates);
+            if (isHit)
+                ChangePlayer = false;
+            else
+                ChangePlayer = true;
+            arena.UpdateArenaToDisplay();
+        }
+
         public void Gameplay()
         {
             int turns = 0;
+            Player currentPlayer = players[0];
 
-            while (!arena1.AllShipsDestroyed() && !arena2.AllShipsDestroyed())
+            while (!players[0].GetArena().AllShipsDestroyed() && !players[1].GetArena().AllShipsDestroyed())
             {
+                if (turns >= players.Length)
+                    turns -= players.Length;
+
+                if(ChangePlayer)
+                    currentPlayer = players[turns];
+
+                Turn(currentPlayer);
+
                 turns++;
-
-                Turn(turns % 2);
-
             }
         }
-        private void Turn(int turnsMod2)
+        private void Turn(Player player)
         {
-            if (turnsMod2 == 0)
-                turnsMod2 = 2;
+            UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, player.GetPlayerNumber());
 
-            UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, turnsMod2);
+            GameCycle_Attack(player);
 
-            if (turnsMod2 == 1)
-                GameCycle_Attack(arena2);
-            else
-                GameCycle_Attack(arena1);
-
-            UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, turnsMod2);
+            UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, player.GetPlayerNumber());
         }
 
 
         public void EndGame()
         {
-            if (arena1.AllShipsDestroyed())
+            if (players[0].GetArena().AllShipsDestroyed())
             {
                 UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 2);
                 return;

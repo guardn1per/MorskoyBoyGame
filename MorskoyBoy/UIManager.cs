@@ -89,14 +89,30 @@ namespace MorskoyBoy
             Console.ReadLine();
         }
 
-        public static void DisplayArena(char[,] arena)
+        public static void DisplayArena(Arena arena)
+        {
+            var charArena = arena.GetArenaToDisplay();
+
+            Console.Clear();
+            for (int i = 0; i < charArena.GetLength(0); i++)
+            {
+                for (int j = 0; j < charArena.GetLength(1); j++)
+                {
+                    Console.Write(charArena[i, j] + " ");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+        public static void DisplayArena(char[,] charArena)
         {
             Console.Clear();
-            for (int i = 0; i < arena.GetLength(0); i++)
+            for (int i = 0; i < charArena.GetLength(0); i++)
             {
-                for (int j = 0; j < arena.GetLength(1); j++)
+                for (int j = 0; j < charArena.GetLength(1); j++)
                 {
-                    Console.Write(arena[i, j] + " ");
+                    Console.Write(charArena[i, j] + " ");
                 }
 
                 Console.WriteLine();

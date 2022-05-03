@@ -14,7 +14,7 @@ namespace MorskoyBoy
             Game game = new Game();
 
             game.PreGame();
-            game.InitArenas();
+            game.Init();
             game.Gameplay();
             game.EndGame();
         }
