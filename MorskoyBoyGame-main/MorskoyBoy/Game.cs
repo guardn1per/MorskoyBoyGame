@@ -30,37 +30,6 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
             arena2.SetArena();
         }
-        public static void GameCycle_Attack(Arena arena)
-        {
-            if (arena.AllShipsDestroyed())
-                return;
-
-
-            (int x, int y) coordinatesOfAttack = (0, 0);
-            arena.UpdateArenaToDisplay(coordinatesOfAttack);
-
-            while (true)
-            {
-                var input = Console.ReadKey().KeyChar;
-                var newCoordinates = MovementManager.MakeAMove(InputToCommand.GetCommand(input), coordinatesOfAttack);
-
-                if (MovementManager.isPossibleToMove(newCoordinates, arena))
-                    coordinatesOfAttack = newCoordinates;
-
-                arena.UpdateArenaToDisplay(coordinatesOfAttack);
-                if (InputToCommand.GetCommand(input) == Command.ChooseAPoint)
-                {
-                    if (MovementManager.isPossibleToChosseAPoint(coordinatesOfAttack, arena))
-                    {
-                        arena.PerformAttack(coordinatesOfAttack);
-
-                        return;
-                    }
-
-                    UIManager.UI_DisplayError(1);
-                }
-            }
-        }
 
         public void Gameplay()
         {
@@ -82,9 +51,9 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, turnsMod2);
 
             if (turnsMod2 == 1)
-                GameCycle_Attack(arena2);
+                AttackLogic.ChooseACellToAttack(arena2);
             else
-                GameCycle_Attack(arena1);
+                AttackLogic.ChooseACellToAttack(arena1);
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, turnsMod2);
         }

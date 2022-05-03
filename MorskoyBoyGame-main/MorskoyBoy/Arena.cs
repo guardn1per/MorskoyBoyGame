@@ -151,7 +151,7 @@ namespace MorskoyBoy
                 arenaToDisplayForEnemy[coordinates.y, coordinates.x] = '!';
                 arena[coordinates.y, coordinates.x] = '!';
                 shipDecksCount--;
-                Game.GameCycle_Attack(this); //Gives one more shot in case of a hit
+                AttackLogic.ChooseACellToAttack(this); //Gives one more shot in case of a hit
                 return;
             }
             
