@@ -23,9 +23,8 @@ namespace MorskoyBoy
             return orientationIsVertical;
         }
 
-        public static bool isPossibleToRotate(Ship ship)
+        public static bool isPossibleToRotate(Ship ship, Arena arena)
         {
-            var arena = ship.ParentArenaGet();
             var arenaDimensions = arena.GetArenaDimensions();
             var arenaArray = arena.GetArenaArray();
             var shipCoordinates = ship.GetShipCoordinates();
@@ -43,9 +42,8 @@ namespace MorskoyBoy
             return true;
         }
 
-        public static bool isPossibleToGo(Ship ship, (int x, int y) newCoordinates)
+        public static bool isPossibleToGo(Ship ship, Arena arena, (int x, int y) newCoordinates)
         {
-            var arena = ship.ParentArenaGet();
             var arenaArray = arena.GetArenaArray();
             var arenaDimensions = arena.GetArenaDimensions();
 
@@ -63,9 +61,8 @@ namespace MorskoyBoy
             return true;
         }
 
-        public static bool isPossibleToPlace(Ship ship)
+        public static bool isPossibleToPlace(Ship ship, Arena arena)
         {
-            var arena = ship.ParentArenaGet();
             var arenaArray = arena.GetArenaArray();
             var arenaDimensions = arena.GetArenaDimensions();
 

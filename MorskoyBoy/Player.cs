@@ -12,16 +12,14 @@ namespace MorskoyBoy
         public int GetPlayerNumber() => playerNumber;
         private Arena arena;
         public Arena GetArena() => arena;
-
+        public void AssignArena(Arena Arena)
+        {
+            arena = Arena;
+        }
 
         public Player(int newPlayerNumber)
         {
             playerNumber = newPlayerNumber;
-        }
-
-        public void SetArena((int x, int y) arenaDimensions, int fourDeckAmount, int threeDeckAmount, int doubleDeckAmount, int singleDeckAmount)
-        {
-            arena = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
     }
 }

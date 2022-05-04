@@ -36,12 +36,8 @@ namespace MorskoyBoy
 
 
         private Ship[] ships;
+        public Ship[] GetShipsArray() => ships.Clone() as Ship[];
         private int shipDecksCount;
-
-        public void SetArena()
-        {
-            PlaceShips();
-        }
 
         private void CreateClearArena(int x, int y)
         {
@@ -62,32 +58,21 @@ namespace MorskoyBoy
 
             for (int i = 0; i < fourDeck; i++)
             {
-                ships[i] = new Ship(4, this);
+                ships[i] = new Ship(4);
             }
             for (int i = fourDeck; i < fourDeck + threeDeck; i++)
             {
-                ships[i] = new Ship(3, this);
+                ships[i] = new Ship(3);
             }
             for (int i = fourDeck + threeDeck; i < fourDeck + threeDeck + twoDeck; i++)
             {
-                ships[i] = new Ship(2, this);
+                ships[i] = new Ship(2);
             }
             for (int i = fourDeck + threeDeck + twoDeck; i < fourDeck + threeDeck + twoDeck + oneDeck; i++)
             {
-                ships[i] = new Ship(1, this);
+                ships[i] = new Ship(1);
             }
         }
-
-        private void PlaceShips()
-        {
-            int shipsToPlace = ships.Length;
-            while(shipsToPlace > 0)
-            {
-                ships[shipsToPlace - 1].Place();
-                shipsToPlace--;
-            }
-        }
-
         public void AddShip(Ship ship)
         {
             var shipCoordinates = ship.GetShipCoordinates();
@@ -119,18 +104,14 @@ namespace MorskoyBoy
                 {
                     arenaToDisplay[shipCoordinates.y + i, shipCoordinates.x] = '#';
                 }
-
-                UIManager.DisplayArena(arenaToDisplay);
-
-                return;
             }
-
-            for (int i = 0; i < ship.DecksAmountGet(); i++)
+            else
             {
-                arenaToDisplay[shipCoordinates.y, shipCoordinates.x + i] = '#';
+                for (int i = 0; i < ship.DecksAmountGet(); i++)
+                {
+                    arenaToDisplay[shipCoordinates.y, shipCoordinates.x + i] = '#';
+                }
             }
-
-            UIManager.DisplayArena(arenaToDisplay);
         }
         public void UpdateArenaToDisplay((int x, int y) coordinates)
         {

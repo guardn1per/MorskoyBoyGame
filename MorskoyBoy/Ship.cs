@@ -9,25 +9,18 @@ namespace MorskoyBoy
     internal class Ship
     {
 
-        public Ship(int decksAmount, Arena arena)
+        public Ship(int decksAmount)
         {
             orientationIsVertical = true;
             DecksAmount = decksAmount;
-            ParentArena = arena;
             shipCoordinates = (0, 0);
         }
 
 
         private bool orientationIsVertical;
-        public void ChangeOrientation()
+        public void SetOrientation(bool isOrientationVertical)
         {
-            if (orientationIsVertical)
-            {
-                orientationIsVertical = false;
-                return;
-            }
-
-            orientationIsVertical = true;
+            orientationIsVertical=isOrientationVertical;
         }
         public bool IsOrientationVerticalGet() => orientationIsVertical;
 
@@ -35,44 +28,15 @@ namespace MorskoyBoy
         private int DecksAmount;
         public int DecksAmountGet() => DecksAmount;
 
-        private Arena ParentArena; 
-        public Arena ParentArenaGet() => ParentArena;
-
         private (int x, int y) shipCoordinates; //shipsCoordinates are anchored to its top-left cell
         public (int x, int y) GetShipCoordinates()
         {
             (int x, int y) res = (shipCoordinates.x, shipCoordinates.y);
             return res;
         }
-
-        public void Place()
+        public void SetShipCoordinates((int x, int y) coordinates)
         {
-            ParentArena.UpdateArenaToDisplay(this);
-
-            while (true)
-            {
-                char input = Console.ReadKey().KeyChar;
-
-                var newCoordinates = ShipPlacementMovement.MakeAMove(InputToCommand.GetCommand(input), shipCoordinates);
-                var newRotation = ShipPlacementMovement.RotateShip(this, InputToCommand.GetCommand(input));
-
-                if (ShipPlacementMovement.isPossibleToRotate(this))
-                    orientationIsVertical = newRotation;
-                if(ShipPlacementMovement.isPossibleToGo(this, newCoordinates))
-                    shipCoordinates = newCoordinates;
-
-                ParentArena.UpdateArenaToDisplay(this);
-
-                if (InputToCommand.GetCommand(input) == Command.ChooseAPoint)
-                {
-                    if (ShipPlacementMovement.isPossibleToPlace(this)) {
-                        ParentArena.AddShip(this);
-                        return;
-                    }
-
-                    UIManager.UI_DisplayError(0);
-                }
-            }
+            shipCoordinates.x = coordinates.x; shipCoordinates.y = coordinates.y;
         }
     }
 }

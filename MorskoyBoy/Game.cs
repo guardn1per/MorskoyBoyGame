@@ -25,19 +25,16 @@ namespace MorskoyBoy
             players = new Player[2];
 
             players[0] = new Player(1);
-            players[0].SetArena(arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
-
             players[1] = new Player(2);
-            players[1].SetArena(arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
 
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 1);
-            players[0].GetArena().SetArena();
+            ArenaSetup(players[0], arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
-            players[1].GetArena().SetArena();
+            ArenaSetup(players[1], arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
-        public void GameCycle_Attack(Player player)
+        private void GameCycle_Attack(Player player)
         {
             var arena = player.GetArena();
 
@@ -72,6 +69,59 @@ namespace MorskoyBoy
                 }
             }
         }
+        private void GameCycle_AddSingleShip(Player player, Ship ship)
+        {
+            var arena = player.GetArena();
+
+            arena.UpdateArenaToDisplay(ship);
+            UIManager.DisplayArena(arena);
+
+            while (true)
+            {
+                char input = Console.ReadKey().KeyChar;
+
+                var newCoordinates = ShipPlacementMovement.MakeAMove(InputToCommand.GetCommand(input), ship.GetShipCoordinates());
+                var newRotation = ShipPlacementMovement.RotateShip(ship, InputToCommand.GetCommand(input));
+
+                if (ShipPlacementMovement.isPossibleToRotate(ship, arena))
+                    ship.SetOrientation(newRotation);
+                if (ShipPlacementMovement.isPossibleToGo(ship, arena, newCoordinates))
+                    ship.SetShipCoordinates(newCoordinates);
+
+                arena.UpdateArenaToDisplay(ship);
+                UIManager.DisplayArena(arena);
+
+                if (InputToCommand.GetCommand(input) == Command.ChooseAPoint)
+                {
+                    if (ShipPlacementMovement.isPossibleToPlace(ship, arena))
+                    {
+                        arena.AddShip(ship);
+                        UIManager.DisplayArena(arena);
+                        return;
+                    }
+
+                    UIManager.UI_DisplayError(0);
+                }
+            }
+        }
+        private void ArenaSetup(Player player, (int x, int y) arenaDimensions, int fourDeckAmount, int threeDeckAmount, int doubleDeckAmount, int singleDeckAmount)
+        {
+            var arena = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
+            player.AssignArena(arena);
+            AddShipsToPlayerArena(player);
+        }
+        public void AddShipsToPlayerArena(Player player)
+        {
+            var arena = player.GetArena();
+            var shipsArray = arena.GetShipsArray();
+
+            int shipsToPlace = shipsArray.Length;
+            while (shipsToPlace > 0)
+            {
+                GameCycle_AddSingleShip(player, shipsArray[shipsToPlace - 1]);
+                shipsToPlace--;
+            }
+        }
 
         private void PerformAttack((int x, int y) coordinates, Player player)
         {
@@ -96,12 +146,14 @@ namespace MorskoyBoy
                 if (turns >= players.Length)
                     turns -= players.Length;
 
-                if(ChangePlayer)
+
+                if (ChangePlayer)
+                {
                     currentPlayer = players[turns];
+                    turns++;
+                }
 
                 Turn(currentPlayer);
-
-                turns++;
             }
         }
         private void Turn(Player player)
