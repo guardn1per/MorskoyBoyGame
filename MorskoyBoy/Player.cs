@@ -8,6 +8,10 @@ namespace MorskoyBoy
 {
     internal class Player
     {
+        private bool isAI = false;
+        public void SetIsAI() => isAI = true;
+        public bool GetIsAI() => isAI;
+
         private int playerNumber;
         public int GetPlayerNumber() => playerNumber;
         private Arena arena;

@@ -19,10 +19,13 @@ namespace MorskoyBoy
 
         private bool ChangePlayer = true;
 
+        private Random AIrandom = new Random();
+
         public void Init()
         {
             player1 = new Player(1);
             player2 = new Player(2);
+            player2.SetIsAI();
 
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 1);
@@ -31,7 +34,7 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
             ArenaSetup(player2, arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
-        private void GameCycle_Attack(Player playerToAttack)
+        private void GameCycle_PlayerAttack(Player playerToAttack)
         {
             var arena = playerToAttack.GetArena();
 
@@ -66,6 +69,30 @@ namespace MorskoyBoy
                 }
             }
         }
+        private void GameCycle_AIattack(Player playerToAttack)
+        {
+            var arena = playerToAttack.GetArena();
+
+            if (arena.AllShipsDestroyed())
+                return;
+
+            var coordinatesToAttack = ChoosePointToAttackAI(playerToAttack);
+            PerformAttack(coordinatesToAttack, playerToAttack);
+
+            UIManager.DisplayArena(arena);
+            UIManager.UI_DisplayMessage(UIManager.MessageName.AIAttackedMessage, 0);
+        }
+        private (int x, int y) ChoosePointToAttackAI(Player playerToAttack)
+        {
+            var arena = playerToAttack.GetArena();
+
+            (int x, int y) coordinatesOfAttack = (AIrandom.Next(0, arena.GetArenaDimensions().x), AIrandom.Next(0, arena.GetArenaDimensions().y));
+
+            if (MovementManager.isPossibleToChosseAPoint(coordinatesOfAttack, arena))
+                return coordinatesOfAttack;
+            return arena.ChooseRandomFreePoint();
+        } 
+
         private void GameCycle_AddSingleShip(Player player, Ship ship)
         {
             var arena = player.GetArena();
@@ -101,6 +128,21 @@ namespace MorskoyBoy
                 }
             }
         }
+        private void GameCycle_AddSingleShipAI(Player player, Ship ship)
+        {
+            var arena = player.GetArena();
+
+            var newCoordinates = (AIrandom.Next(0, arena.GetArenaDimensions().x),  AIrandom.Next(0, arena.GetArenaDimensions().y));
+            var newRotation = true;
+
+            ship.SetOrientation(newRotation);
+            ship.SetShipCoordinates(newCoordinates);
+
+            if(ShipPlacementMovement.isPossibleToPlace(ship, arena))
+                arena.AddShip(ship);
+        }
+
+
         private void ArenaSetup(Player player, (int x, int y) arenaDimensions, int fourDeckAmount, int threeDeckAmount, int doubleDeckAmount, int singleDeckAmount)
         {
             var arena = new Arena(arenaDimensions.x, arenaDimensions.y, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
@@ -163,7 +205,10 @@ namespace MorskoyBoy
         {
             UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, attackingPlayer.GetPlayerNumber());
 
-            GameCycle_Attack(playerToAttack);
+            if(attackingPlayer.GetIsAI())
+                GameCycle_AIattack(playerToAttack);
+            else
+                GameCycle_PlayerAttack(playerToAttack);
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, attackingPlayer.GetPlayerNumber());
         }
@@ -173,11 +218,11 @@ namespace MorskoyBoy
         {
             if (player1.GetArena().AllShipsDestroyed())
             {
-                UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 1);
+                UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 2);
                 return;
             }
 
-            UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 2);
+            UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 1);
         }
 
         public void PreGame()

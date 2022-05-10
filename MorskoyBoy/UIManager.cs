@@ -15,6 +15,7 @@ namespace MorskoyBoy
             InputWait,
             RuleMessage,
             WinMessage,
+            AIAttackedMessage,
             Default
         }
 
@@ -50,10 +51,17 @@ namespace MorskoyBoy
                 case MessageName.WinMessage:
                     DisplayWinMessage(playerNumber);
                     break;
+                case MessageName.AIAttackedMessage:
+                    DisplayAIAttackedMessage();
+                    break;
                 default:
                     Console.WriteLine("Default message");
                     break;
             }
+        }
+        private static void DisplayAIAttackedMessage()
+        {
+            Console.WriteLine("AI has performed an attack");
         }
         private static void DisplayArenaSetupMessage(int playerNumber)
         {

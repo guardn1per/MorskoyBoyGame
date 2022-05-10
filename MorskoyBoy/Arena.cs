@@ -143,6 +143,19 @@ namespace MorskoyBoy
                 return false;
             return true;
         }
+        public (int x, int y) ChooseRandomFreePoint()
+        {
+            for (int i = 0; i < arenaDimensions.y; i++)
+            {
+                for (int j = 0; j < arenaDimensions.x; j++)
+                {
+                    if (arenaToDisplayForEnemy[i, j] == ' ')
+                        return (j, i);
+                }
+            }
+
+            return (0, 0);
+        }
     }
 }
 
