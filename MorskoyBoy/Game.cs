@@ -15,24 +15,21 @@ namespace MorskoyBoy
         private const int threeDeckAmount = 0;
         private const int doubleDeckAmount = 0;
         private const int singleDeckAmount = 0;
-
-        private Player[] players;
+        private Player player1, player2;
 
         private bool ChangePlayer = true;
 
         public void Init()
         {
-            players = new Player[2];
-
-            players[0] = new Player(1);
-            players[1] = new Player(2);
+            player1 = new Player(1);
+            player2 = new Player(2);
 
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 1);
-            ArenaSetup(players[0], arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
+            ArenaSetup(player1, arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
-            ArenaSetup(players[1], arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
+            ArenaSetup(player2, arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
         private void GameCycle_Attack(Player player)
         {
@@ -138,18 +135,19 @@ namespace MorskoyBoy
 
         public void Gameplay()
         {
-            int turns = 0;
-            Player currentPlayer = players[0];
+            int turns = 1;
+            Player currentPlayer = player1;
 
-            while (!players[0].GetArena().AllShipsDestroyed() && !players[1].GetArena().AllShipsDestroyed())
+            while (!player1.GetArena().AllShipsDestroyed() && !player2.GetArena().AllShipsDestroyed())
             {
-                if (turns >= players.Length)
-                    turns -= players.Length;
 
 
                 if (ChangePlayer)
                 {
-                    currentPlayer = players[turns];
+                    if (turns % 2 == 1)
+                        currentPlayer = player1;
+                    else
+                        currentPlayer = player2;
                     turns++;
                 }
 
@@ -168,13 +166,13 @@ namespace MorskoyBoy
 
         public void EndGame()
         {
-            if (players[0].GetArena().AllShipsDestroyed())
+            if (player1.GetArena().AllShipsDestroyed())
             {
-                UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 2);
+                UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 1);
                 return;
             }
 
-            UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 1);
+            UIManager.UI_DisplayMessage(UIManager.MessageName.WinMessage, 2);
         }
 
         public void PreGame()
