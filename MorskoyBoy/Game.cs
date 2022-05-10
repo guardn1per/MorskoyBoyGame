@@ -31,9 +31,9 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
             ArenaSetup(player2, arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
-        private void GameCycle_Attack(Player player)
+        private void GameCycle_Attack(Player playerToAttack)
         {
-            var arena = player.GetArena();
+            var arena = playerToAttack.GetArena();
 
             if (arena.AllShipsDestroyed())
                 return;
@@ -57,7 +57,7 @@ namespace MorskoyBoy
                 {
                     if (MovementManager.isPossibleToChosseAPoint(coordinatesOfAttack, arena))
                     {
-                        PerformAttack(coordinatesOfAttack, player);
+                        PerformAttack(coordinatesOfAttack, playerToAttack);
                         UIManager.DisplayArena(arena);
                         return;
                     }
@@ -137,6 +137,7 @@ namespace MorskoyBoy
         {
             int turns = 1;
             Player currentPlayer = player1;
+            Player playerToAttack = player2;
 
             while (!player1.GetArena().AllShipsDestroyed() && !player2.GetArena().AllShipsDestroyed())
             {
@@ -145,22 +146,26 @@ namespace MorskoyBoy
                 if (ChangePlayer)
                 {
                     if (turns % 2 == 1)
-                        currentPlayer = player1;
+                    {
+                        currentPlayer = player1; playerToAttack = player2;
+                    }
                     else
-                        currentPlayer = player2;
+                    {
+                        currentPlayer = player2; playerToAttack = player1;
+                    }
                     turns++;
                 }
 
-                Turn(currentPlayer);
+                Turn(currentPlayer, playerToAttack);
             }
         }
-        private void Turn(Player player)
+        private void Turn(Player attackingPlayer, Player playerToAttack)
         {
-            UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, player.GetPlayerNumber());
+            UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, attackingPlayer.GetPlayerNumber());
 
-            GameCycle_Attack(player);
+            GameCycle_Attack(playerToAttack);
 
-            UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, player.GetPlayerNumber());
+            UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, attackingPlayer.GetPlayerNumber());
         }
 
 
