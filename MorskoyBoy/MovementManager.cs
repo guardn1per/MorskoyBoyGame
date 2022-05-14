@@ -33,7 +33,7 @@ namespace MorskoyBoy
         public static bool isPossibleToChosseAPoint((int x, int y) newCoordinates, Arena arena)
         {
             var arenaArray = arena.GetArenaArray();
-            if (arenaArray[newCoordinates.y, newCoordinates.x] == '!' || arenaArray[newCoordinates.y, newCoordinates.x] == '%')
+            if (arenaArray[newCoordinates.y, newCoordinates.x] == arena.GetHitChar() || arenaArray[newCoordinates.y, newCoordinates.x] == arena.GetMissChar())
                 return false;
             return true;
         }

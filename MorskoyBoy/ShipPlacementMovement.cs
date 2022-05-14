@@ -70,7 +70,7 @@ namespace MorskoyBoy
             {
                 for (int i = 0; i < ship.DecksAmountGet(); i++)
                 {
-                    if (arenaArray[ship.GetShipCoordinates().y + i, ship.GetShipCoordinates().x] != '.')
+                    if (arenaArray[ship.GetShipCoordinates().y + i, ship.GetShipCoordinates().x] != arena.GetWaterChar())
                         return false;
                 }
                 return true;
@@ -78,7 +78,7 @@ namespace MorskoyBoy
 
             for (int i = 0; i < ship.DecksAmountGet(); i++)
             {
-                if (arenaArray[ship.GetShipCoordinates().y, ship.GetShipCoordinates().x + i] != '.')
+                if (arenaArray[ship.GetShipCoordinates().y, ship.GetShipCoordinates().x + i] != arena.GetWaterChar())
                     return false;
             }
             return true;

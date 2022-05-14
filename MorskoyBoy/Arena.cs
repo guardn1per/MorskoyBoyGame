@@ -4,6 +4,16 @@ namespace MorskoyBoy
 {
     internal class Arena
     {
+        private readonly char shipChar = '#';
+        public char GetShipChar() => shipChar;
+        private readonly char attackPointerChar = '@';
+        public char GetAttackPointerChar() => attackPointerChar;
+        private readonly char hitChar = '!';
+        public char GetHitChar() => hitChar;
+        private readonly char missChar = '%';
+        public char GetMissChar() => missChar;
+        private const char waterChar = '.';
+        public char GetWaterChar() => waterChar;
 
         public Arena(int x, int y, int fourDeck, int threeDeck, int twoDeck, int oneDeck)
         {
@@ -47,7 +57,7 @@ namespace MorskoyBoy
             {
                 for (int j = 0; j < x; j++)
                 {
-                    arena[i, j] = '.';
+                    arena[i, j] = waterChar;
                 }
             }
         }
@@ -85,14 +95,14 @@ namespace MorskoyBoy
             {
                 for (int i = 0; i < ship.DecksAmountGet(); i++)
                 {
-                    arena[shipCoordinates.y + i, shipCoordinates.x] = '#';
+                    arena[shipCoordinates.y + i, shipCoordinates.x] = shipChar;
                 }
                 return;
             }
 
             for (int i = 0; i < ship.DecksAmountGet(); i++)
             {
-                arena[shipCoordinates.y, shipCoordinates.x + i] = '#';
+                arena[shipCoordinates.y, shipCoordinates.x + i] = shipChar;
             }
         }
 
@@ -106,40 +116,40 @@ namespace MorskoyBoy
             {
                 for (int i = 0; i < ship.DecksAmountGet(); i++)
                 {
-                    arenaToDisplay[shipCoordinates.y + i, shipCoordinates.x] = '#';
+                    arenaToDisplay[shipCoordinates.y + i, shipCoordinates.x] = shipChar;
                 }
             }
             else
             {
                 for (int i = 0; i < ship.DecksAmountGet(); i++)
                 {
-                    arenaToDisplay[shipCoordinates.y, shipCoordinates.x + i] = '#';
+                    arenaToDisplay[shipCoordinates.y, shipCoordinates.x + i] = shipChar;
                 }
             }
         }
         public void UpdateArenaToDisplay((int x, int y) coordinates)
         {
             arenaToDisplay = arenaToDisplayForEnemy.Clone() as char[,];
-            arenaToDisplay[coordinates.y, coordinates.x] = '@';
+            arenaToDisplay[coordinates.y, coordinates.x] = attackPointerChar;
         }
         public void UpdateArenaToDisplay()
         {
             arenaToDisplay = arenaToDisplayForEnemy.Clone() as char[,];
         }
 
-        public bool HitCheck((int x, int y) attackPoint) => arena[attackPoint.y, attackPoint.x] == '#';
+        public bool HitCheck((int x, int y) attackPoint) => arena[attackPoint.y, attackPoint.x] == shipChar;
         public void UpdateInformationOnAttack(bool isHit, (int x, int y) attackPoint)
         {
             if (isHit)
             {
-                arenaToDisplayForEnemy[attackPoint.y, attackPoint.x] = '!';
-                arena[attackPoint.y, attackPoint.x] = '!';
+                arenaToDisplayForEnemy[attackPoint.y, attackPoint.x] = hitChar;
+                arena[attackPoint.y, attackPoint.x] = hitChar;
                 shipDecksCount--;
                 return;
             }
 
-            arena[attackPoint.y, attackPoint.x] = '%';
-            arenaToDisplayForEnemy[attackPoint.y, attackPoint.x] = '%';
+            arena[attackPoint.y, attackPoint.x] = missChar;
+            arenaToDisplayForEnemy[attackPoint.y, attackPoint.x] = missChar;
         }
         public bool AllShipsDestroyed()
         {
@@ -153,7 +163,7 @@ namespace MorskoyBoy
             {
                 for (int j = 0; j < arenaDimensions.x; j++)
                 {
-                    if (arenaToDisplayForEnemy[i, j] == ' ')
+                    if (arenaToDisplayForEnemy[i, j] == waterChar)
                         return (j, i);
                 }
             }
