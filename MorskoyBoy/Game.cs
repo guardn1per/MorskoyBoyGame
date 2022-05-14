@@ -33,7 +33,7 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
             ArenaSetup(player2, arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
-        private void PlayerAttack(Player playerToAttack)
+        private void PlayerAttackLoop(Player playerToAttack)
         {
             var arena = playerToAttack.GetArena();
 
@@ -55,6 +55,8 @@ namespace MorskoyBoy
 
                 arena.UpdateArenaToDisplay(coordinatesOfAttack);
                 UIManager.DisplayArena(arena);
+
+                //if input is 'choose a point' input we end the loop of choosing a point and secure attacking position
                 if (InputToCommand.GetCommand(input) == Command.ChooseAPoint)
                 {
                     if (MovementManager.isPossibleToChosseAPoint(coordinatesOfAttack, arena))
@@ -68,7 +70,7 @@ namespace MorskoyBoy
                 }
             }
         }
-        private void AIattack(Player playerToAttack)
+        private void AIattackLoop(Player playerToAttack)
         {
             var arena = playerToAttack.GetArena();
 
@@ -114,6 +116,7 @@ namespace MorskoyBoy
                 arena.UpdateArenaToDisplay(ship);
                 UIManager.DisplayArena(arena);
 
+                //if input is 'choose a point' input we end the loop of choosing a point and secure ship position
                 if (InputToCommand.GetCommand(input) == Command.ChooseAPoint)
                 {
                     if (ShipPlacementMovement.isPossibleToPlace(ship, arena))
@@ -205,9 +208,9 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, attackingPlayer.GetPlayerNumber());
 
             if(attackingPlayer.GetIsAI())
-                AIattack(playerToAttack);
+                AIattackLoop(playerToAttack);
             else
-                PlayerAttack(playerToAttack);
+                PlayerAttackLoop(playerToAttack);
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, attackingPlayer.GetPlayerNumber());
         }

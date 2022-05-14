@@ -112,19 +112,5 @@ namespace MorskoyBoy
                 Console.WriteLine();
             }
         }
-
-        public static void DisplayArena(char[,] charArena)
-        {
-            Console.Clear();
-            for (int i = 0; i < charArena.GetLength(0); i++)
-            {
-                for (int j = 0; j < charArena.GetLength(1); j++)
-                {
-                    Console.Write(charArena[i, j] + " ");
-                }
-
-                Console.WriteLine();
-            }
-        }
     }
 }
