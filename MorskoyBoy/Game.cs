@@ -12,9 +12,9 @@ namespace MorskoyBoy
 
         // amount of different ship types
         private const int fourDeckAmount = 1;
-        private const int threeDeckAmount = 0;
-        private const int doubleDeckAmount = 0;
-        private const int singleDeckAmount = 0;
+        private const int threeDeckAmount = 2;
+        private const int doubleDeckAmount = 3;
+        private const int singleDeckAmount = 4;
         private Player player1, player2;
 
         private bool ChangePlayer = true;
