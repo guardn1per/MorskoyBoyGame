@@ -55,22 +55,26 @@ namespace MorskoyBoy
         {
             shipDecksCount = fourDeck*4 + threeDeck*3 + twoDeck*2 + oneDeck;
             ships = new Ship[fourDeck + threeDeck + twoDeck + oneDeck];
+            var shipsPlacedAmount = 0;
 
             for (int i = 0; i < fourDeck; i++)
             {
                 ships[i] = new Ship(4);
             }
-            for (int i = fourDeck; i < fourDeck + threeDeck; i++)
+            shipsPlacedAmount += fourDeck;
+            for (int i = 0; i < threeDeck; i++)
             {
-                ships[i] = new Ship(3);
+                ships[i + shipsPlacedAmount] = new Ship(3);
             }
-            for (int i = fourDeck + threeDeck; i < fourDeck + threeDeck + twoDeck; i++)
+            shipsPlacedAmount += threeDeck;
+            for (int i = 0; i < twoDeck; i++)
             {
-                ships[i] = new Ship(2);
+                ships[i + shipsPlacedAmount] = new Ship(2);
             }
-            for (int i = fourDeck + threeDeck + twoDeck; i < fourDeck + threeDeck + twoDeck + oneDeck; i++)
+            shipsPlacedAmount += twoDeck;
+            for (int i = 0; i < oneDeck; i++)
             {
-                ships[i] = new Ship(1);
+                ships[i + shipsPlacedAmount] = new Ship(1);
             }
         }
         public void AddShip(Ship ship)
