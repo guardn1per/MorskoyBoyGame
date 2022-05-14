@@ -33,7 +33,7 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 2);
             ArenaSetup(player2, arenaDimensions, fourDeckAmount, threeDeckAmount, doubleDeckAmount, singleDeckAmount);
         }
-        private void GameCycle_PlayerAttack(Player playerToAttack)
+        private void PlayerAttack(Player playerToAttack)
         {
             var arena = playerToAttack.GetArena();
 
@@ -68,7 +68,7 @@ namespace MorskoyBoy
                 }
             }
         }
-        private void GameCycle_AIattack(Player playerToAttack)
+        private void AIattack(Player playerToAttack)
         {
             var arena = playerToAttack.GetArena();
 
@@ -92,7 +92,7 @@ namespace MorskoyBoy
             return arena.ChooseRandomFreePoint();
         } 
 
-        private void GameCycle_AddSingleShip(Player player, Ship ship)
+        private void AddSingleShip(Player player, Ship ship)
         {
             var arena = player.GetArena();
 
@@ -127,7 +127,7 @@ namespace MorskoyBoy
                 }
             }
         }
-        private void GameCycle_AddSingleShipAI(Player player, Ship ship)
+        private void AddSingleShipAI(Player player, Ship ship)
         {
             var arena = player.GetArena();
 
@@ -156,7 +156,7 @@ namespace MorskoyBoy
             int shipsToPlace = shipsArray.Length;
             while (shipsToPlace > 0)
             {
-                GameCycle_AddSingleShip(player, shipsArray[shipsToPlace - 1]);
+                AddSingleShip(player, shipsArray[shipsToPlace - 1]);
                 shipsToPlace--;
             }
         }
@@ -205,9 +205,9 @@ namespace MorskoyBoy
             UIManager.UI_DisplayMessage(UIManager.MessageName.PreMoveMessage, attackingPlayer.GetPlayerNumber());
 
             if(attackingPlayer.GetIsAI())
-                GameCycle_AIattack(playerToAttack);
+                AIattack(playerToAttack);
             else
-                GameCycle_PlayerAttack(playerToAttack);
+                PlayerAttack(playerToAttack);
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.InputWait, attackingPlayer.GetPlayerNumber());
         }
