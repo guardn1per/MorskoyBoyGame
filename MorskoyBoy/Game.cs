@@ -25,7 +25,6 @@ namespace MorskoyBoy
         {
             player1 = new Player(1);
             player2 = new Player(2);
-            player2.SetIsAI();
 
 
             UIManager.UI_DisplayMessage(UIManager.MessageName.ArenaSetup, 1);
